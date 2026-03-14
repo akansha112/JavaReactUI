@@ -13,9 +13,14 @@ export default function Home() {
       flexDirection: "column", 
       minHeight: "100vh",
       width: "100%",
-      overflowX: "hidden" // Prevents horizontal scrolling on mobile
+      overflowX: "hidden", 
+      position: "relative",
+      background: "#0a0f1e" // <--- Aapka favourite theme color yahan hai
     }}>
-      <HeroTypewriter />
+      {/* Hero section */}
+      <div style={{ position: "relative", zIndex: 1, width: "100%" }}>
+        <HeroTypewriter />
+      </div>
 
       {/* Main Dashboard Container */}
       <div className="main-layout">
@@ -33,6 +38,19 @@ export default function Home() {
       </div>
 
       <style>{`
+        /* Sabse important reset: border-box */
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+
+        html, body {
+          width: 100%;
+          background: #0a0f1e; /* Body background bhi set kar diya */
+          overflow-x: hidden;
+        }
+
         .main-layout {
           display: flex;
           flex: 1;
@@ -41,7 +59,8 @@ export default function Home() {
           max-width: 1400px;
           margin: 0 auto;
           width: 100%;
-          box-sizing: border-box;
+          position: relative;
+          z-index: 10;
         }
 
         .sidebar-container {
@@ -54,24 +73,31 @@ export default function Home() {
           flex: 1;
           display: flex;
           flex-direction: column;
-          min-width: 0; /* Fixes flexbox overflow issues */
+          min-width: 0;
         }
 
         /* MOBILE VIEW ADJUSTMENTS */
         @media (max-width: 768px) {
           .main-layout {
-            flex-direction: column-reverse; /* Put ChatBox on top, History below */
-            padding: 0 15px 20px;
-            gap: 15px;
+            flex-direction: column-reverse; 
+            padding: 0 15px 40px;
+            gap: 30px;
+            width: 100%;
           }
 
           .sidebar-container {
             flex: none;
             width: 100%;
+            position: relative;
+            z-index: 5;
           }
 
           .chat-container {
-            height: 500px; /* Fixed height for chat on mobile */
+            height: 75vh; 
+            width: 100%;
+            position: relative;
+            z-index: 100 !important;
+            pointer-events: auto !important;
           }
         }
       `}</style>

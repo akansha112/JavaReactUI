@@ -1,3 +1,4 @@
+// src/components/ChatBox.jsx
 import React, { useState, useEffect, useRef } from "react";
 import Suggestions from "./Suggestions";
 import { API_BASE } from "../config";
@@ -8,9 +9,17 @@ export default function ChatBox({ chatHistory, onNewMessage }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const chatEndRef = useRef(null);
 
-  // FIX: Sync messages state when a history item is clicked
+  // Handle screen resize for mobile detection
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Sync messages state when a history item is clicked
   useEffect(() => {
     if (chatHistory) {
       setMessages([
@@ -34,7 +43,7 @@ export default function ChatBox({ chatHistory, onNewMessage }) {
   }, [messages]);
 
   const sendMessage = async (question) => {
-    if (!question.trim()) return;
+    if (!question || !question.trim()) return;
 
     setMessages((prev) => [...prev, { text: question, user: true }]);
     setLoading(true);
@@ -68,13 +77,19 @@ export default function ChatBox({ chatHistory, onNewMessage }) {
         flex: 3,
         display: "flex",
         flexDirection: "column",
-        padding: "25px",
-        background: "rgba(255,255,255,0.05)",
+        padding: isMobile ? "15px" : "25px",
+        // Increased opacity to 0.12 so it's not pitch black
+        background: "rgba(255, 255, 255, 0.12)", 
         borderRadius: "24px",
-        backdropFilter: "blur(15px)",
-        border: "1px solid rgba(255,255,255,0.1)",
-        height: "600px", // Match this with your sidebar height
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)", 
+        border: "1px solid rgba(255, 255, 255, 0.15)",
+        // Responsive height for mobile
+        height: isMobile ? "75vh" : "600px", 
         boxSizing: "border-box",
+        position: "relative",
+        zIndex: 50, // Ensures it sits above background glows
+        touchAction: "manipulation" // Removes mobile tap delay
       }}
     >
       {/* Scrollable Message Container */}
@@ -84,11 +99,11 @@ export default function ChatBox({ chatHistory, onNewMessage }) {
           overflowY: "auto", 
           display: "flex", 
           flexDirection: "column",
-          paddingRight: "5px" 
+          paddingRight: "5px",
+          WebkitOverflowScrolling: "touch" // Smoother scrolling on iPhone
         }} 
         className="custom-scrollbar"
       >
-        {/* THIS IS THE KEY: A spacer that pushes content to the bottom */}
         <div style={{ flex: "1 1 auto" }}></div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -99,11 +114,11 @@ export default function ChatBox({ chatHistory, onNewMessage }) {
                 alignSelf: msg.user ? "flex-end" : "flex-start",
                 background: msg.user 
                   ? "linear-gradient(135deg, #6B73FF, #000DFF)" 
-                  : "rgba(255,255,255,0.08)",
+                  : "rgba(255,255,255,0.1)", // Light bubble for visibility
                 padding: "12px 18px",
                 borderRadius: msg.user ? "18px 18px 2px 18px" : "18px 18px 18px 2px",
                 marginBottom: "15px",
-                maxWidth: "75%",
+                maxWidth: isMobile ? "85%" : "75%",
                 wordBreak: "break-word",
                 fontSize: "0.95rem",
                 boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
@@ -119,24 +134,41 @@ export default function ChatBox({ chatHistory, onNewMessage }) {
         </div>
       </div>
 
-      {/* Input Section - Stays at bottom */}
-      <div style={{ marginTop: "15px", borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: "15px" }}>
-        <Suggestions suggestions={suggestions} onClick={sendMessage} />
+      {/* Input Section */}
+      <div style={{ 
+        marginTop: "15px", 
+        borderTop: "1px solid rgba(255,255,255,0.1)", 
+        paddingTop: "15px",
+        position: "relative",
+        zIndex: 60
+      }}>
+        {/* Horizontal scroll for suggestions on mobile */}
+        <div style={{ 
+          overflowX: "auto", 
+          whiteSpace: "nowrap", 
+          paddingBottom: "10px",
+          marginBottom: "5px"
+        }}>
+          <Suggestions suggestions={suggestions} onClick={sendMessage} />
+        </div>
+        
         <input
           type="text"
           value={input}
-          placeholder="Ask me anything about Akansha..."
+          placeholder="Ask me anything..."
           style={{
             width: "100%",
-            marginTop: "10px",
-            padding: "15px 20px",
+            marginTop: "5px",
+            padding: isMobile ? "12px 15px" : "15px 20px",
             borderRadius: "15px",
             border: "none",
             outline: "none",
-            background: "rgba(0,0,0,0.2)",
+            background: "rgba(0,0,0,0.4)", // Darker for contrast
             color: "#fff",
             boxSizing: "border-box",
-            fontSize: "1rem"
+            // CRITICAL: 16px font prevents auto-zoom on iPhone which blocks clicks
+            fontSize: "16px", 
+            touchAction: "manipulation"
           }}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
