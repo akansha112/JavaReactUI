@@ -11,7 +11,7 @@ export default function About() {
 
   const features = [
     { title: "AI-Powered", desc: "Utilizes advanced LLMs to provide intelligent, context-aware responses about my professional journey." },
-    { title: "Real-time History", desc: "Tracks your conversation history instantly using a .NET backend and high-performance database." },
+    { title: "Real-time History", desc: "Tracks your conversation history instantly using a SpringBoot backend and high-performance database." },
     { title: "Dynamic Suggestions", desc: "Smart prompts help you discover my skills, projects, and experience without typing a word." },
     { title: "Responsive Glass UI", desc: "A modern, sleek interface built with React that looks stunning on any device or screen size." },
   ];
