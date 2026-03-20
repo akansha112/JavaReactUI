@@ -49,7 +49,7 @@ export default function About() {
           </h1>
           <p style={{ fontSize: isMobile ? "1rem" : "1.2rem", lineHeight: "1.6", color: "rgba(255,255,255,0.8)", maxWidth: "800px", margin: "0 auto" }}>
             This application is more than just a chatbot; it is a digital twin designed to represent my work, 
-            personality, and technical expertise. Built with a React frontend and a robust .NET backend.
+            personality, and technical expertise. Built with a React frontend and a robust SpringBoot backend.
           </p>
         </section>
 
