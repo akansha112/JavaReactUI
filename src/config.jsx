@@ -1,2 +1,2 @@
 // src/config.js
-export const API_BASE = "https://portfolioai-1.onrender.com/api/chat"; // your .NET backend
+export const API_BASE = "https://javaportfolioai.onrender.com/api/chat"; // your .NET backend
